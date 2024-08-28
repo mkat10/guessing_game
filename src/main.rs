@@ -1,3 +1,28 @@
+use rand::Rng;
+use std::cmp::Ordering;
+/**
+* Guess the number!
+*/
+use std::io;
+
 fn main() {
-    println!("Hello, world!");
+    println!("Guess the number between 1 and 3!");
+    println!("Please input your guess.");
+
+    let mut guess: String = String::new();
+    let secret_number: u32 = rand::thread_rng().gen_range(1..=3);
+
+    io::stdin()
+        .read_line(&mut guess)
+        .expect("Failed to read line");
+
+    // Reassign guess after parsing the result to a 32 integer
+    let guess: u32 = guess.trim().parse().expect("Please type a number!");
+
+    print!("You guessed: {}. ", guess);
+    match guess.cmp(&secret_number) {
+        Ordering::Less => println!("Too small!"),
+        Ordering::Greater => println!("Too big!"),
+        Ordering::Equal => println!("You win!"),
+    }
 }
