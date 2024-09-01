@@ -1,28 +1,37 @@
-use rand::Rng;
-use std::cmp::Ordering;
+use guessing_game::guess_lib::guess_number;
+
+
 /**
 * Guess the number!
 */
-use std::io;
+
 
 fn main() {
-    println!("Guess the number between 1 and 3!");
-    println!("Please input your guess.");
 
-    let mut guess: String = String::new();
-    let secret_number: u32 = rand::thread_rng().gen_range(1..=3);
+    use rand::Rng;
 
-    io::stdin()
-        .read_line(&mut guess)
-        .expect("Failed to read line");
+    // Set hard coded range limits
+    const MIN: u32 = 10;
+    const MAX: u32 = 20;
 
-    // Reassign guess after parsing the result to a 32 integer
-    let guess: u32 = guess.trim().parse().expect("Please type a number!");
+    // how many ties have we tried?
+    let mut tries: i32 = 1;
+    
+    let secret_number: u32 = rand::thread_rng().gen_range(MIN..=MAX);
 
-    print!("You guessed: {}. ", guess);
-    match guess.cmp(&secret_number) {
-        Ordering::Less => println!("Too small!"),
-        Ordering::Greater => println!("Too big!"),
-        Ordering::Equal => println!("You win!"),
+    // Send control character 27 to clear the screen
+    print!("{}[2J", 27 as char);
+    guess_number::intro(MIN, MAX, secret_number);
+    
+
+    loop {
+        let next_guess: String = String::new();
+        
+        guess_number::input_helper_txt(tries);
+        if guess_number::read_guess(next_guess, secret_number) {
+            break;
+        } else {
+            tries = tries + 1;
+        }               
     }
 }
